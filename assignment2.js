@@ -20,13 +20,15 @@ class Transaction {
 }
 
 class BankAccount {
-    constructor(accountNumber, firstName, lastName) {
+    constructor(accountNumber, firstName, lastName, dailyWithdrawalLimit) {
         this._accountNumber = accountNumber;
         this._firstName = firstName;
         this._lastName = lastName;
         this._accountHolder = `${firstName} ${lastName}`;
         this._balance = 0;
         this._transactions = [];
+        this._dailyWithdrawalLimit = dailyWithdrawalLimit;
+        this._withdrawalAmountToday = 0; // Track total withdrawal amount for the day
     }
 
     // Getters
@@ -59,9 +61,16 @@ class BankAccount {
     }
 
     withdraw(amount) {
+        // Check if withdrawal amount exceeds daily limit
+        if (this._withdrawalAmountToday + amount > this._dailyWithdrawalLimit) {
+            console.log("Daily withdrawal limit exceeded.");
+            return;
+        }
+
         // Withdraw money from the account
         if (this._balance >= amount) {
             this._balance -= amount;
+            this._withdrawalAmountToday += amount; // Update daily withdrawal amount
             const transaction = new Transaction('Withdrawal', amount);
             this._transactions.push(transaction);
         } else {
@@ -76,7 +85,7 @@ class BankAccount {
 }
 
 // Create an instance of BankAccount
-const myAccount = new BankAccount(2171396313, "Developer", "Kings");
+const myAccount = new BankAccount(2171396313, "Developer", "Kings", 6000); // Daily withdrawal limit is $10,000
 
 // Deposit money into the account
 myAccount.deposit(100000);
@@ -101,4 +110,3 @@ transactions.forEach((transaction, index) => {
     console.log("Timestamp:", transaction.timestamp);
     console.log("---------------------");
 });
-
