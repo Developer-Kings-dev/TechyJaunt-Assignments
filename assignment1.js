@@ -100,5 +100,6 @@ transactions.forEach((transaction, index) => {
     console.log("Amount:", transaction.amount);
     console.log("Timestamp:", transaction.timestamp);
     console.log("---------------------");
+    console.log("---------------------");
 });
 
